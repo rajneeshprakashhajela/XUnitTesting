@@ -30,7 +30,17 @@ on:
   push:
     branches:
       - "main"
-
+  ### DO NOT REMOVE COMMENTS FROM NEXT LINES - OTHERWISE VARIABLE VALUES WILL NOT BE SET ACCORDINGLY.
+  ### VARIABLES STARTING WITH "CI-" COME FROM GITLAB - See https://docs.gitlab.com/ee/ci/variables/
+  # CI_COMMIT_SHORT_SHA: "$CI_COMMIT_SHORT_SHA"             # Short Commit Hash, e.g. "1ecfd275"
+  # CI_COMMIT_REF_NAME: "$CI_COMMIT_REF_NAME"               # Branch Name of the commit, e.g. "master"
+  # CI_REPOSITORY_URL: "$CI_REPOSITORY_URL"
+  # CI_PROJECT_URL: "$CI_PROJECT_URL" 
+  # Gitlab repository URL, e.g. "https://gitlab-ci-token:abcde-1234ABCD5678ef@example.com/gitlab-org/gitlab-ce.git"
+  # CI_PIPELINE_ID: "$CI_PIPELINE_ID"                       # Gitlab Buildnumber, e.g. "1234"
+  ### 
+  ### Do NOT modify anything here:
+  ### 
 env:
   AWS_REGION: MY_AWS_REGION                   # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: MY_ECR_REPOSITORY           # set this to your Amazon ECR repository name
