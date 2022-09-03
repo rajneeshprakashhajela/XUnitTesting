@@ -42,6 +42,24 @@ on:
   ### Do NOT modify anything here:
   ### 
 env:
+  AWS_DEFAULT_REGION: "eu-central-1"                      # AWS Region
+  MY_AWS_REGION: "eu-central-1"                           # AWS Region - MY_AWS_REGION is used in case AWS_DEFAULT_REGION is set to a different value on Gitlab Project or Group Level (see https://docs.gitlab.com/ee/ci/variables/#priority-of-environment-variables)
+  KUBECONFIG_DEV: "./kubeconfig_dev"                      # kubeconfig file name for DEV cluster in DEV account
+  KUBECONFIG_PROD: "./kubeconfig_prod"                    # kubeconfig file name for PROD cluster in PROD account
+  DOCKER_TLS_CERTDIR: ""                                  # fix regarding docker 18.09+ https://gitlab.com/gitlab-org/gitlab-runner/issues/4501 and https://gitlab.com/gitlab-org/gitlab-ce/issues/64968
+  BUILD_ID: "$CI_PIPELINE_ID-$CI_COMMIT_SHORT_SHA"        # Composed BuildId, e.g. "1234-1ecfd275"
+  IMAGE_TAG: "pipeline-$CI_PIPELINE_ID-git-$CI_COMMIT_SHORT_SHA" # The unique tag for the docker image
+  #
+  # This variables are specific for DaaA and are set in Gitlab CI/CD:
+  #
+  AWS_ROLE_PREFIX_DEV: "$AWS_ROLE_PREFIX_DEV"             # DEV:  Prefix for gitlab runner role - value is "arn:aws:iam::343651901854:role/gitlab-runner-daaa-eks-dev-" - IAM Role naming schema is: ${AWS_ROLE_PREFIX_[DEV|PROD]} + $KUBE_NAMESPACE
+  AWS_ROLE_PREFIX_PROD: "$AWS_ROLE_PREFIX_PROD"           # PROD: Prefix for gitlab runner role - value is "arn:aws:iam::507163017739:role/gitlab-runner-daaa-eks-prod-" - IAM Role naming schema is: ${AWS_ROLE_PREFIX_[DEV|PROD]} + $KUBE_NAMESPACE
+  REPOSITORY_PREFIX: "$REPOSITORY_PREFIX"                 # Prefix of the AWS ECR Repository - value is "343651901854.dkr.ecr.eu-central-1.amazonaws.com/"
+  KUBECONFIG_DEV_BASE64: "$KUBECONFIG_DEV_BASE64"         # Base64 encoded config file for DEV Cluster
+  KUBECONFIG_PROD_BASE64: "$KUBECONFIG_PROD_BASE64"         # Base64 encoded config file for PROD Cluster
+
+
+
   AWS_REGION: MY_AWS_REGION                   # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: MY_ECR_REPOSITORY           # set this to your Amazon ECR repository name
   ECS_SERVICE: MY_ECS_SERVICE                 # set this to your Amazon ECS service name
@@ -50,6 +68,19 @@ env:
                                                # file, e.g. .aws/task-definition.json
   CONTAINER_NAME: MY_CONTAINER_NAME           # set this to the name of the container in the
                                                # containerDefinitions section of your task definition
+  KUBE_NAMESPACE: "proview"    # Name of the application/k8s-namespace/tiller-namespace - must be [dmp|pid|proview|shared|smartclass|virtuoso]
+  REPOSITORY_NAME: "proview-ws" # AWS ECR repository name (e.g. dmp-fe, dmp-api) WITHOUT Prefix. This name will be appended to $REPOSITORY_PREFIX
+  ### HELM_RELEASE_NAME_STAGE_{STAGE}: The name of the helm releases. Only PROD stage is allowed to be deployed to prod cluster (K8S_KUBECONFIG_PROD_FILE, K8S_NAMESPACE_PROD,TILLER_NAMESPACE_PROD)
+  HELM_RELEASE_DEV: "ws-dev"
+  HELM_RELEASE_QA: "ws-qa"
+  HELM_RELEASE_PROD: "ws"
+  HELM_VALUES_FILE_DEV: "./values-dev.yaml"
+  HELM_VALUES_FILE_QA: "./values-qa.yaml"
+  HELM_VALUES_FILE_PROD: "./values-prod.yaml"
+  ASPNETCORE_ENVIRONMENT_DEV: "Development"
+  ASPNETCORE_ENVIRONMENT_QA: "Release"
+  ASPNETCORE_ENVIRONMENT_PROD: "Production"
+  NUGET_CONFIG: "$NUGET_CONFIG"
 
 permissions:
   contents: read
